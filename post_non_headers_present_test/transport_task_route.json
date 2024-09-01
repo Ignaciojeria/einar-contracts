@@ -1,0 +1,1048 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "TRANSPORT TASK MANAGER API",
+    "version": "1.0.1"
+  },
+  "paths": {
+    "/order_creation": {
+      "post": {
+        "summary": "GSRT|TTM 1.- ORDER CREATION",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrderRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateOrderResponse"
+                }
+              }
+            }
+          },
+          "226": {
+            "description": "Im used",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImUsedResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "X-cmRef",
+            "in": "header",
+            "required": false,
+            "description": "Consumer",
+            "schema": {
+              "type": "string"
+            },
+            "example": "FOO"
+          },
+          {
+            "name": "X-country",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "CL"
+          },
+          {
+            "name": "X-commerce",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "SOD"
+          }
+        ]
+      }
+    },
+    "/orders_creation": {
+      "post": {
+        "summary": "GSRT|TTM 2.- MULTIPLE ORDERS CREATION",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CreateOrderRequest"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateOrderResponse"
+                }
+              }
+            }
+          },
+          "226": {
+            "description": "Im used",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImUsedResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "X-cmRef",
+            "in": "header",
+            "required": false,
+            "description": "Consumer",
+            "schema": {
+              "type": "string"
+            },
+            "example": "CORP"
+          },
+          {
+            "name": "X-country",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "CL"
+          },
+          {
+            "name": "X-commerce",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "CORP"
+          }
+        ]
+      }
+    },
+    "/route_creation": {
+      "post": {
+        "summary": "GSRT|TTM 3.- ROUTE CREATION",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RouteCreationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Route successfully created"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "X-cmRef",
+            "in": "header",
+            "required": false,
+            "description": "Consumer",
+            "schema": {
+              "type": "string"
+            },
+            "example": "SIMPLIROUTE"
+          },
+          {
+            "name": "X-country",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "CL"
+          },
+          {
+            "name": "X-commerce",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "CORP"
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CreateOrderRequest": {
+        "type": "object",
+        "required": [
+          "referenceId",
+          "items",
+          "type",
+          "destination",
+          "origin",
+          "businessIdentifiers"
+        ],
+        "properties": {
+          "businessIdentifiers": {
+            "type": "object",
+            "required": [
+              "commerce",
+              "channel"
+            ],
+            "properties": {
+              "commerce": {
+                "type": "string",
+                "example": "SOD"
+              },
+              "channel": {
+                "type": "string",
+                "example": "FOO"
+              }
+            }
+          },
+          "referenceId": {
+            "type": "string",
+            "example": "20454021"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "DELIVERY_ORDER",
+              "DELIVERY_ORDER_PICK",
+              "DELIVERY_ORDER_RLO",
+              "STORE",
+              "PICKUP_POINT"
+            ],
+            "example": "DELIVERY_ORDER"
+          },
+          "references": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "type",
+                "value"
+              ],
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "anyConsumerOrderReference"
+                },
+                "value": {
+                  "type": "string",
+                  "example": "anyConsumerOrderReferenceValue"
+                }
+              }
+            }
+          },
+          "origin": {
+            "type": "object",
+            "anyOf": [
+              {
+                "required": [
+                  "nodeInfo"
+                ]
+              },
+              {
+                "required": [
+                  "addressInfo"
+                ]
+              }
+            ],
+            "properties": {
+              "nodeInfo": {
+                "type": "object",
+                "properties": {
+                  "nodeId": {
+                    "type": "string",
+                    "example": "aad44a88-454b-431a-9251-7ef63104b112"
+                  },
+                  "operatorId": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "operatorType": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "references": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "facility"
+                        },
+                        "value": {
+                          "type": "string",
+                          "example": "7100"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "addressInfo": {
+                "type": "object",
+                "required": [
+                  "addressLine1"
+                ],
+                "properties": {
+                  "contact": {
+                    "type": "object",
+                    "required": [
+                      "fullName",
+                      "contacts"
+                    ],
+                    "properties": {
+                      "fullName": {
+                        "type": "string",
+                        "example": "ELZA IVONNE SORIANO RODRIGUEZ"
+                      },
+                      "contacts": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "required": [
+                            "type",
+                            "value"
+                          ],
+                          "properties": {
+                            "value": {
+                              "type": "string",
+                              "example": "5540689657"
+                            },
+                            "type": {
+                              "type": "string",
+                              "example": "phone"
+                            }
+                          }
+                        }
+                      },
+                      "documents": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "required": [
+                            "type",
+                            "value"
+                          ],
+                          "properties": {
+                            "value": {
+                              "type": "string",
+                              "example": "18126634-4"
+                            },
+                            "type": {
+                              "type": "string",
+                              "example": "DNI"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "politicalAreaId": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "district": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "addressLine1": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "addressLine2": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "addressLine3": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "latitude": {
+                    "type": "number",
+                    "format": "decimal",
+                    "example": 1.1
+                  },
+                  "longitude": {
+                    "type": "number",
+                    "example": 1.1
+                  },
+                  "zipCode": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "timeZone": {
+                    "type": "string",
+                    "example": "string"
+                  }
+                }
+              }
+            }
+          },
+          "destination": {
+            "type": "object",
+            "anyOf": [
+              {
+                "required": [
+                  "nodeInfo"
+                ]
+              },
+              {
+                "required": [
+                  "addressInfo"
+                ]
+              }
+            ],
+            "properties": {
+              "deliveryInstructions": {
+                "type": "string",
+                "example": "string"
+              },
+              "nodeInfo": {
+                "type": "object",
+                "properties": {
+                  "nodeId": {
+                    "type": "string",
+                    "example": "aad44a88-454b-431a-9251-7ef63104b112"
+                  },
+                  "operatorId": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "operatorType": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "references": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "facility"
+                        },
+                        "value": {
+                          "type": "string",
+                          "example": "7100"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "addressInfo": {
+                "type": "object",
+                "required": [
+                  "addressLine1"
+                ],
+                "properties": {
+                  "contact": {
+                    "type": "object",
+                    "required": [
+                      "fullName",
+                      "contacts"
+                    ],
+                    "properties": {
+                      "fullName": {
+                        "type": "string",
+                        "example": "Walther Kallina"
+                      },
+                      "contacts": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "required": [
+                            "type",
+                            "value"
+                          ],
+                          "properties": {
+                            "value": {
+                              "type": "string",
+                              "example": "977575871"
+                            },
+                            "type": {
+                              "type": "string",
+                              "example": "phone"
+                            }
+                          }
+                        }
+                      },
+                      "documents": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "required": [
+                            "type",
+                            "value"
+                          ],
+                          "properties": {
+                            "value": {
+                              "type": "string",
+                              "example": "9358315-9"
+                            },
+                            "type": {
+                              "type": "string",
+                              "example": "RUT"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "politicalAreaId": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "district": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "addressLine1": {
+                    "type": "string",
+                    "example": "Santa Elena Calle del Sol"
+                  },
+                  "addressLine2": {
+                    "type": "string",
+                    "example": "44"
+                  },
+                  "addressLine3": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "latitude": {
+                    "type": "number",
+                    "example": -33.2180344
+                  },
+                  "longitude": {
+                    "type": "number",
+                    "example": -70.73417529999999
+                  },
+                  "zipCode": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "timeZone": {
+                    "type": "string",
+                    "example": "string"
+                  }
+                }
+              }
+            }
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "itemId",
+                "description",
+                "quantity",
+                "referenceSku"
+              ],
+              "properties": {
+                "itemId": {
+                  "type": "string",
+                  "example": "242705"
+                },
+                "logisticCondition": {
+                  "type": "string",
+                  "example": "frágil/resistente/inflamable/alto valor"
+                },
+                "referenceSku": {
+                  "type": "string",
+                  "example": "1231"
+                },
+                "quantity": {
+                  "type": "object",
+                  "required": [
+                    "quantityNumber",
+                    "quantityUnit"
+                  ],
+                  "properties": {
+                    "quantityNumber": {
+                      "type": "integer",
+                      "example": 2
+                    },
+                    "quantityUnit": {
+                      "type": "string",
+                      "example": "C/U"
+                    }
+                  }
+                },
+                "references": {
+                  "type": "array",
+                  "required": [
+                    "type",
+                    "value"
+                  ],
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "type",
+                      "value"
+                    ],
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "example": "offering"
+                      },
+                      "value": {
+                        "type": "string",
+                        "example": "242705"
+                      }
+                    }
+                  }
+                },
+                "insurance": {
+                  "type": "object",
+                  "required": [
+                    "unitValue",
+                    "currency"
+                  ],
+                  "properties": {
+                    "unitValue": {
+                      "type": "integer",
+                      "example": 2300
+                    },
+                    "currency": {
+                      "type": "string",
+                      "example": "CLP"
+                    }
+                  }
+                },
+                "description": {
+                  "type": "string",
+                  "example": "JUNTACREST ULTRAMAX CHOCOLE"
+                },
+                "dimensions": {
+                  "type": "object",
+                  "required": [
+                    "height",
+                    "width",
+                    "depth",
+                    "unit"
+                  ],
+                  "properties": {
+                    "height": {
+                      "type": "number",
+                      "example": 0.44
+                    },
+                    "width": {
+                      "type": "number",
+                      "example": 0.44
+                    },
+                    "depth": {
+                      "type": "number",
+                      "example": 0.44
+                    },
+                    "unit": {
+                      "type": "string",
+                      "example": "cm"
+                    }
+                  }
+                },
+                "weight": {
+                  "type": "object",
+                  "required": [
+                    "value",
+                    "unit"
+                  ],
+                  "properties": {
+                    "value": {
+                      "type": "number",
+                      "example": 3.6
+                    },
+                    "unit": {
+                      "type": "string",
+                      "example": "kg"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "packages": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "lpn",
+                "itemReferences"
+              ],
+              "properties": {
+                "lpn": {
+                  "type": "string",
+                  "example": "LPN_12345"
+                },
+                "packageType": {
+                  "type": "string",
+                  "example": "cartonBox/plastic/..."
+                },
+                "dimensions": {
+                  "type": "object",
+                  "required": [
+                    "height",
+                    "width",
+                    "depth",
+                    "unit"
+                  ],
+                  "properties": {
+                    "height": {
+                      "type": "number",
+                      "example": 0.44
+                    },
+                    "width": {
+                      "type": "number",
+                      "example": 0.44
+                    },
+                    "depth": {
+                      "type": "number",
+                      "example": 0.44
+                    },
+                    "unit": {
+                      "type": "string",
+                      "example": "cm"
+                    }
+                  }
+                },
+                "weight": {
+                  "type": "object",
+                  "required": [
+                    "value",
+                    "unit"
+                  ],
+                  "properties": {
+                    "value": {
+                      "type": "number",
+                      "example": 12.3
+                    },
+                    "unit": {
+                      "type": "string",
+                      "example": "kg"
+                    }
+                  }
+                },
+                "insurance": {
+                  "type": "object",
+                  "required": [
+                    "unitValue",
+                    "currency"
+                  ],
+                  "properties": {
+                    "unitValue": {
+                      "type": "integer",
+                      "example": 2300
+                    },
+                    "currency": {
+                      "type": "string",
+                      "example": "CLP"
+                    }
+                  }
+                },
+                "itemReferences": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "itemId",
+                      "quantity"
+                    ],
+                    "properties": {
+                      "itemId": {
+                        "type": "string",
+                        "example": "242705"
+                      },
+                      "quantity": {
+                        "type": "object",
+                        "required": [
+                          "quantityNumber",
+                          "quantityUnit"
+                        ],
+                        "properties": {
+                          "quantityNumber": {
+                            "type": "integer",
+                            "example": 1
+                          },
+                          "quantityUnit": {
+                            "type": "string",
+                            "example": "C/U"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "promisedDate": {
+            "type": "object",
+            "required": [
+              "dateFrom",
+              "dateTo",
+              "timeRangeFrom",
+              "timeRangeTo",
+              "serviceType",
+              "serviceCategory"
+            ],
+            "properties": {
+              "dateFrom": {
+                "type": "string",
+                "format": "date",
+                "example": "1985-12-01"
+              },
+              "dateTo": {
+                "type": "string",
+                "format": "date",
+                "example": "1985-12-01"
+              },
+              "timeRangeFrom": {
+                "type": "string",
+                "example": "9:00"
+              },
+              "timeRangeTo": {
+                "type": "string",
+                "example": "21:00"
+              },
+              "serviceType": {
+                "type": "string",
+                "enum": [
+                  "HOME_DELIVERY",
+                  "COLLECT"
+                ],
+                "example": "HOME_DELIVERY"
+              },
+              "serviceCategory": {
+                "type": "string",
+                "example": "REGULAR"
+              }
+            }
+          },
+          "extraFields": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "simpliroute.example"
+                },
+                "values": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "example": "SD_98"
+                  }
+                }
+              }
+            }
+          },
+          "skills": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "truck"
+                },
+                "value": {
+                  "type": "string",
+                  "example": "77031"
+                }
+              }
+            }
+          }
+        }
+      },
+      "CreateOrderResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "20454021"
+          },
+          "message": {
+            "type": "string",
+            "example": "Order Creation Requested"
+          }
+        }
+      },
+      "ImUsedResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "20454021"
+          }
+        }
+      },
+      "ValidationError": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "example": "Invalid input"
+          },
+          "message": {
+            "type": "string",
+            "example": "Key: 'ReferenceId' Error:Field validation for 'ReferenceId' failed on the 'required' tag"
+          }
+        }
+      },
+      "RouteCreationRequest": {
+        "type": "object",
+        "properties": {
+          "referenceId": {
+            "type": "string",
+            "example": "simplirouteRouteID"
+          },
+          "vehicle": {
+            "type": "object",
+            "properties": {
+              "plate": {
+                "type": "string",
+                "example": "CXC-48900"
+              },
+              "references": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "geosortId"
+                    },
+                    "value": {
+                      "type": "string",
+                      "example": "3191"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "carrier": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "example": "carrier_name"
+              },
+              "document": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "RUT"
+                  },
+                  "value": {
+                    "type": "string",
+                    "example": "18666636-4"
+                  }
+                }
+              },
+              "references": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "geosortId"
+                    },
+                    "value": {
+                      "type": "string",
+                      "example": "3191"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "visits": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "visit": {
+                  "type": "object",
+                  "properties": {
+                    "visitId": {
+                      "type": "string",
+                      "example": "bad44a88-454b-431a-9251-7ef63104b11e"
+                    },
+                    "deliverySequence": {
+                      "type": "integer",
+                      "example": 1
+                    }
+                  }
+                },
+                "orders": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CreateOrderRequest"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

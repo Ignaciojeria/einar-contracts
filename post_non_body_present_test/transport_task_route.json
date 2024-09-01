@@ -1,0 +1,151 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "TRANSPORT TASK MANAGER API",
+      "version": "1.0.1"
+    },
+    "paths": {
+      "/order_creation": {
+        "post": {
+          "summary": "GSRT|TTM 1.- ORDER CREATION",
+          "requestBody": {},
+          "responses": {
+            "200": {
+              "description": "Successful response"
+            },
+            "226": {
+              "description": "Im used"
+            },
+            "400": {
+              "description": "Invalid input response"
+            }
+          },
+          "parameters": [
+            {
+              "name": "X-cmRef",
+              "in": "header",
+              "required": false,
+              "description": "Consumer",
+              "schema": {
+                "type": "string"
+              },
+              "example": "FOO"
+            },
+            {
+              "name": "X-country",
+              "in": "header",
+              "required": false,
+              "schema": {
+                "type": "string"
+              },
+              "example": "CL"
+            },
+            {
+              "name": "X-commerce",
+              "in": "header",
+              "required": false,
+              "schema": {
+                "type": "string"
+              },
+              "example": "SOD"
+            }
+          ]
+        }
+      },
+      "/orders_creation": {
+        "post": {
+          "summary": "GSRT|TTM 2.- MULTIPLE ORDERS CREATION",
+          "requestBody": {},
+          "responses": {
+            "200": {
+              "description": "Successful response"
+            },
+            "226": {
+              "description": "Im used"
+            },
+            "400": {
+              "description": "Invalid input response"
+            }
+          },
+          "parameters": [
+            {
+              "name": "X-cmRef",
+              "in": "header",
+              "required": false,
+              "description": "Consumer",
+              "schema": {
+                "type": "string"
+              },
+              "example": "CORP"
+            },
+            {
+              "name": "X-country",
+              "in": "header",
+              "required": false,
+              "schema": {
+                "type": "string"
+              },
+              "example": "CL"
+            },
+            {
+              "name": "X-commerce",
+              "in": "header",
+              "required": false,
+              "schema": {
+                "type": "string"
+              },
+              "example": "CORP"
+            }
+          ]
+        }
+      },
+      "/route_creation": {
+        "post": {
+          "summary": "GSRT|TTM 3.- ROUTE CREATION",
+          "requestBody": {},
+          "responses": {
+            "200": {
+              "description": "Route successfully created"
+            },
+            "400": {
+              "description": "Bad request"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          },
+          "parameters": [
+            {
+              "name": "X-cmRef",
+              "in": "header",
+              "required": false,
+              "description": "Consumer",
+              "schema": {
+                "type": "string"
+              },
+              "example": "SIMPLIROUTE"
+            },
+            {
+              "name": "X-country",
+              "in": "header",
+              "required": false,
+              "schema": {
+                "type": "string"
+              },
+              "example": "CL"
+            },
+            {
+              "name": "X-commerce",
+              "in": "header",
+              "required": false,
+              "schema": {
+                "type": "string"
+              },
+              "example": "CORP"
+            }
+          ]
+        }
+      }
+    }
+  }
+  
