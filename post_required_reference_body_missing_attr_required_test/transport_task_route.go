@@ -3,7 +3,7 @@ package post_required_reference_body_missing_attr_required_test
 import (
 	_ "embed"
 
-	"github.com/Ignaciojeria/contract"
+	contract "github.com/Ignaciojeria/einar-contracts"
 )
 
 type TransportTaskRoute struct {

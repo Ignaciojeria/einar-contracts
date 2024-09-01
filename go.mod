@@ -1,4 +1,4 @@
-module github.com/Ignaciojeria/contract
+module github.com/Ignaciojeria/einar-contracts
 
 go 1.22.0
 

@@ -3,7 +3,7 @@ package post_non_body_present_but_header_present_test
 import (
 	_ "embed"
 
-	"github.com/Ignaciojeria/contract"
+	contract "github.com/Ignaciojeria/einar-contracts"
 )
 
 type TransportTaskRoute struct {

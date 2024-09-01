@@ -3,7 +3,7 @@ package post_required_headers_test
 import (
 	_ "embed"
 
-	"github.com/Ignaciojeria/contract"
+	contract "github.com/Ignaciojeria/einar-contracts"
 )
 
 type TransportTaskRoute struct {
