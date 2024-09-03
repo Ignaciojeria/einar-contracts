@@ -8,28 +8,36 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/MarceloPetrucio/go-scalar-api-reference"
 	clarketmjson "github.com/clarketm/json"
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/qri-io/jsonschema"
 )
 
 type Contract struct {
-	Data          []byte
-	Path          string
-	HTTPMethod    string
-	ContentType   string
-	GitToken      string
-	RepositoryURL string
+	APIReferenceHTMLOptions *scalar.Options
+	Data                    []byte
+	Path                    string
+	HTTPMethod              string
+	ContentType             string
+	GitToken                string
+	RepositoryURL           string
 }
 
 type APISpec struct {
-	contract   *Contract
-	bodySchema *jsonschema.Schema
-	parameters []*openapi3.ParameterRef
+	apiReferenceHTML string
+	contract         *Contract
+	bodySchema       *jsonschema.Schema
+	parameters       []*openapi3.ParameterRef
 }
 
-func NewAPIAPISpec(contract Contract) (*APISpec, error) {
+func NewAPISpec(contract Contract) (*APISpec, error) {
+	htmlContent, err := scalar.ApiReferenceHTML(contract.APIReferenceHTMLOptions)
+	if err != nil {
+		return nil, err
+	}
 	obj := &APISpec{
+		apiReferenceHTML: htmlContent,
 		contract: &Contract{
 			Data:          contract.Data,
 			Path:          contract.Path,
@@ -197,4 +205,8 @@ func (v *APISpec) ValidateRequestHeaders(headers http.Header) error {
 	}
 
 	return nil
+}
+
+func (v *APISpec) ApiReferenceHTML() string {
+	return v.apiReferenceHTML
 }
