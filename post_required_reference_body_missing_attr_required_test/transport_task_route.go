@@ -16,11 +16,11 @@ var transport_task_route []byte
 
 func NewTransportTaskRoute() (TransportTaskRoute, error) {
 	routeCreation, err := contract.LoadSpecEndpoint(
-		contract.Contract{
-			Data:        transport_task_route,
-			Path:        "/route_creation",
-			HTTPMethod:  "POST",
-			ContentType: "application/json",
+		contract.EndpointDetails{
+			ContractData: transport_task_route,
+			Path:         "/route_creation",
+			HTTPMethod:   "POST",
+			ContentType:  "application/json",
 		},
 	)
 	if err != nil {
@@ -28,11 +28,11 @@ func NewTransportTaskRoute() (TransportTaskRoute, error) {
 	}
 
 	orderCreation, err := contract.LoadSpecEndpoint(
-		contract.Contract{
-			Data:        transport_task_route,
-			Path:        "/order_creation",
-			HTTPMethod:  "POST",
-			ContentType: "application/json",
+		contract.EndpointDetails{
+			ContractData: transport_task_route,
+			Path:         "/order_creation",
+			HTTPMethod:   "POST",
+			ContentType:  "application/json",
 		},
 	)
 	if err != nil {

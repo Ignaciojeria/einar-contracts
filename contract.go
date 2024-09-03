@@ -13,32 +13,32 @@ import (
 	"github.com/qri-io/jsonschema"
 )
 
-type Contract struct {
-	Data        []byte
-	Path        string
-	HTTPMethod  string
-	ContentType string
+type EndpointDetails struct {
+	ContractData []byte
+	Path         string
+	HTTPMethod   string
+	ContentType  string
 }
 
 type Endpoint struct {
-	contract   *Contract
-	bodySchema *jsonschema.Schema
-	parameters []*openapi3.ParameterRef
+	endpointDetails *EndpointDetails
+	bodySchema      *jsonschema.Schema
+	parameters      []*openapi3.ParameterRef
 }
 
-func LoadSpecEndpoint(contract Contract) (*Endpoint, error) {
+func LoadSpecEndpoint(endpointDetails EndpointDetails) (*Endpoint, error) {
 	obj := &Endpoint{
-		contract: &Contract{
-			Data:        contract.Data,
-			Path:        contract.Path,
-			HTTPMethod:  contract.HTTPMethod,
-			ContentType: contract.ContentType,
+		endpointDetails: &EndpointDetails{
+			ContractData: endpointDetails.ContractData,
+			Path:         endpointDetails.Path,
+			HTTPMethod:   endpointDetails.HTTPMethod,
+			ContentType:  endpointDetails.ContentType,
 		},
 	}
 
 	ctx := context.Background()
 	loader := &openapi3.Loader{Context: ctx, IsExternalRefsAllowed: true}
-	data, err := loader.LoadFromData(obj.contract.Data)
+	data, err := loader.LoadFromData(obj.endpointDetails.ContractData)
 	if err != nil {
 		return nil, err
 	}
@@ -47,12 +47,12 @@ func LoadSpecEndpoint(contract Contract) (*Endpoint, error) {
 		derefSchemas(data.Components.Schemas)
 	}
 
-	s := data.Paths.Find(obj.contract.Path)
+	s := data.Paths.Find(obj.endpointDetails.Path)
 	if s == nil {
-		return nil, errors.New("contract path: " + obj.contract.Path + " not found")
+		return nil, errors.New("contract path: " + obj.endpointDetails.Path + " not found")
 	}
 	var operation *openapi3.Operation
-	switch strings.ToUpper(obj.contract.HTTPMethod) {
+	switch strings.ToUpper(obj.endpointDetails.HTTPMethod) {
 	case http.MethodGet:
 		operation = s.Get
 	case http.MethodPost:
@@ -73,7 +73,7 @@ func LoadSpecEndpoint(contract Contract) (*Endpoint, error) {
 	}
 
 	if operation == nil {
-		return nil, errors.New("contract path: " + obj.contract.Path + " " + obj.contract.HTTPMethod + " operation not found")
+		return nil, errors.New("contract path: " + obj.endpointDetails.Path + " " + obj.endpointDetails.HTTPMethod + " operation not found")
 	}
 
 	obj.parameters = operation.Parameters
@@ -83,12 +83,12 @@ func LoadSpecEndpoint(contract Contract) (*Endpoint, error) {
 		return obj, nil
 	}
 
-	if obj.contract.ContentType != "application/json" {
-		return nil, errors.New("contract path: " + obj.contract.Path + " " + obj.contract.HTTPMethod +
+	if obj.endpointDetails.ContentType != "application/json" {
+		return nil, errors.New("contract path: " + obj.endpointDetails.Path + " " + obj.endpointDetails.HTTPMethod +
 			" current supported media types are: application/json")
 	}
 
-	mediaType := requestBody.Value.Content.Get(obj.contract.ContentType)
+	mediaType := requestBody.Value.Content.Get(obj.endpointDetails.ContentType)
 	if mediaType == nil {
 		mediaType = &openapi3.MediaType{}
 	}
