@@ -15,7 +15,7 @@ func TestTransportTaskRoute(t *testing.T) {
 	}
 
 	// Validar el JSON resultante contra el esquema
-	err = schema.ValidateBodyBytes(fakeExampleBody)
+	err = schema.RouteCreation.ValidateBodyBytes(fakeExampleBody)
 	if err == nil {
 		t.Error("Validation should have failed, but it passed")
 		slog.Error("Validation failed to catch missing required fields")
@@ -75,7 +75,7 @@ func TestTransportTaskRoute(t *testing.T) {
 
 	for _, tt := range headerTests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := schema.ValidateRequestHeaders(tt.headers)
+			err := schema.RouteCreation.ValidateRequestHeaders(tt.headers)
 			if (err != nil) != tt.wantError {
 				slog.Error("Header validation error", slog.String("test", tt.name), slog.String("error", err.Error()))
 				t.Errorf("Test %s: expected error = %v, got %v", tt.name, tt.wantError, err != nil)

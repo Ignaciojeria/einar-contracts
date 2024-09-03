@@ -7,14 +7,15 @@ import (
 )
 
 type TransportTaskRoute struct {
-	*contract.APISpec
+	RouteCreation *contract.APISpec
+	OrderCreation *contract.APISpec
 }
 
 //go:embed transport_task_route.json
 var transport_task_route []byte
 
 func NewTransportTaskRoute() (TransportTaskRoute, error) {
-	spec, err := contract.NewAPISpec(
+	routeCreation, err := contract.NewAPISpec(
 		contract.Contract{
 			Data:        transport_task_route,
 			Path:        "/route_creation",
@@ -25,5 +26,19 @@ func NewTransportTaskRoute() (TransportTaskRoute, error) {
 	if err != nil {
 		return TransportTaskRoute{}, err
 	}
-	return TransportTaskRoute{spec}, nil
+
+	orderCreation, err := contract.NewAPISpec(
+		contract.Contract{
+			Data:        transport_task_route,
+			Path:        "/order_creation",
+			HTTPMethod:  "POST",
+			ContentType: "application/json",
+		},
+	)
+	if err != nil {
+		return TransportTaskRoute{}, err
+	}
+	return TransportTaskRoute{
+		RouteCreation: routeCreation,
+		OrderCreation: orderCreation}, nil
 }
