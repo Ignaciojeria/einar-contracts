@@ -7,8 +7,8 @@ import (
 )
 
 type TransportTaskRoute struct {
-	RouteCreation *contract.APISpec
-	OrderCreation *contract.APISpec
+	RouteCreation *contract.Endpoint
+	OrderCreation *contract.Endpoint
 }
 
 //go:embed transport_task_route.json

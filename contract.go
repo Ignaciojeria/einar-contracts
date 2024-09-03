@@ -20,14 +20,14 @@ type Contract struct {
 	ContentType string
 }
 
-type APISpec struct {
+type Endpoint struct {
 	contract   *Contract
 	bodySchema *jsonschema.Schema
 	parameters []*openapi3.ParameterRef
 }
 
-func LoadSpecEndpoint(contract Contract) (*APISpec, error) {
-	obj := &APISpec{
+func LoadSpecEndpoint(contract Contract) (*Endpoint, error) {
+	obj := &Endpoint{
 		contract: &Contract{
 			Data:        contract.Data,
 			Path:        contract.Path,
@@ -141,7 +141,7 @@ func derefSchemaRef(schemaRef *openapi3.SchemaRef) {
 	derefSchemaRef(val.AdditionalProperties.Schema)
 }
 
-func (v *APISpec) ValidateBodyBytes(json []byte) error {
+func (v *Endpoint) ValidateBodyBytes(json []byte) error {
 	if v.bodySchema == nil {
 		return nil
 	}
@@ -160,7 +160,7 @@ func (v *APISpec) ValidateBodyBytes(json []byte) error {
 	return errors.New(sb.String())
 }
 
-func (v *APISpec) ValidateBodyInterface(json interface{}) error {
+func (v *Endpoint) ValidateBodyInterface(json interface{}) error {
 	if v.bodySchema == nil {
 		return nil
 	}
@@ -172,7 +172,7 @@ func (v *APISpec) ValidateBodyInterface(json interface{}) error {
 	return v.ValidateBodyBytes(b)
 }
 
-func (v *APISpec) ValidateRequestHeaders(headers http.Header) error {
+func (v *Endpoint) ValidateRequestHeaders(headers http.Header) error {
 	var sb strings.Builder
 
 	for _, paramRef := range v.parameters {

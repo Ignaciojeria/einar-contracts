@@ -7,7 +7,7 @@ import (
 )
 
 type TransportTaskRoute struct {
-	*contract.APISpec
+	*contract.Endpoint
 }
 
 //go:embed transport_task_route.json
