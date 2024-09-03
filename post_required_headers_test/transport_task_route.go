@@ -14,7 +14,7 @@ type TransportTaskRoute struct {
 var transport_task_route []byte
 
 func NewTransportTaskRoute() (TransportTaskRoute, error) {
-	spec, err := contract.NewAPISpec(
+	spec, err := contract.LoadSpecEndpoint(
 		contract.Contract{
 			Data:        transport_task_route,
 			Path:        "/route_creation",

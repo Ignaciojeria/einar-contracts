@@ -14,12 +14,10 @@ import (
 )
 
 type Contract struct {
-	Data          []byte
-	Path          string
-	HTTPMethod    string
-	ContentType   string
-	GitToken      string
-	RepositoryURL string
+	Data        []byte
+	Path        string
+	HTTPMethod  string
+	ContentType string
 }
 
 type APISpec struct {
@@ -28,15 +26,13 @@ type APISpec struct {
 	parameters []*openapi3.ParameterRef
 }
 
-func NewAPISpec(contract Contract) (*APISpec, error) {
+func LoadSpecEndpoint(contract Contract) (*APISpec, error) {
 	obj := &APISpec{
 		contract: &Contract{
-			Data:          contract.Data,
-			Path:          contract.Path,
-			HTTPMethod:    contract.HTTPMethod,
-			ContentType:   contract.ContentType,
-			GitToken:      contract.GitToken,
-			RepositoryURL: contract.RepositoryURL,
+			Data:        contract.Data,
+			Path:        contract.Path,
+			HTTPMethod:  contract.HTTPMethod,
+			ContentType: contract.ContentType,
 		},
 	}
 
