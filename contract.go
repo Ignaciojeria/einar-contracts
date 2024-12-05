@@ -178,12 +178,29 @@ func (v *Endpoint) ValidateRequestHeaders(headers http.Header) error {
 	for _, paramRef := range v.parameters {
 		param := paramRef.Value
 
+		// Validar headers requeridos
 		if param.In == openapi3.ParameterInHeader && param.Required {
 			headerName := param.Name
 			headerValue := headers.Get(headerName)
 
 			if headerValue == "" {
 				sb.WriteString(fmt.Sprintf("Header '%s' is required but not present\n", headerName))
+				continue
+			}
+
+			// Validar si el header tiene valores definidos como enum
+			if param.Schema != nil && len(param.Schema.Value.Enum) > 0 {
+				isValid := false
+				for _, enumValue := range param.Schema.Value.Enum {
+					if fmt.Sprintf("%v", enumValue) == headerValue {
+						isValid = true
+						break
+					}
+				}
+				if !isValid {
+					sb.WriteString(fmt.Sprintf("Header '%s' has invalid value '%s'. Expected one of: %v\n",
+						headerName, headerValue, param.Schema.Value.Enum))
+				}
 			}
 		}
 	}
